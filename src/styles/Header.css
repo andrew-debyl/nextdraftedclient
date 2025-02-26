@@ -1,0 +1,58 @@
+.header {
+  color: white;
+  padding: 15px 0;
+}
+
+.header_container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header_logo-wrapper img {
+  height: 60px;
+  transform: scaleY(0.80);
+}
+
+.header_menu {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.header_menu li {
+  margin-left: 20px;
+}
+
+.header_item {
+  color: white;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.header_item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.header_signup,
+.header_login {
+  background-color: #FFD700;
+  color: black;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.header_signup:hover,
+.header_login:hover {
+  background-color: #f7e377;
+}
