@@ -1,95 +1,131 @@
-/* AthletePortfolio.css */
-.athlete-portfolio {
-    font-family: sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-  }
-  
-  .container {
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px 0;
-  }
-  
-  header {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-  }
-  
-  main {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
-  
-  .profile {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .profile-image img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 20px;
-  }
-  
-  .profile-info h2 {
-    margin-top: 0;
-  }
-  
-  .stats,
-  .videos,
-  .gallery {
-    margin-bottom: 20px;
-  }
-  
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
-  }
-  
-  .stat {
-    background-color: #f0f0f0;
-    padding: 15px;
-    border-radius: 5px;
-    text-align: center;
-  }
-  
-  .video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 10px;
-  }
-  
-  .video video {
-    width: 100%;
-    border-radius: 5px;
-  }
-  
-  .image-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
-  }
-  
-  .image-grid img {
-    width: 100%;
-    border-radius: 5px;
-    object-fit: cover;
-  }
-  
-  footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-  }
+/* General Portfolio Styles (updated) */
+.portfolio-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #222; /* Dark background to match header */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white; /* White text to match header */
+}
+
+/* Portfolio Header Section (matching header style) */
+.portfolio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.avatar-img {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 4px solid #FFD700; /* Gold border to match the header button */
+}
+
+.athlete-info {
+  max-width: 600px;
+}
+
+.athlete-info h1 {
+  font-size: 2rem;
+  margin: 0;
+  color: #FFD700; /* Gold color for the name */
+}
+
+.athlete-info p {
+  color: #ddd; /* Slightly lighter text color for readability */
+}
+
+/* Section Styles */
+section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #333; /* Darker background for sections */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+  font-size: 1.5rem;
+  color: #FFD700; /* Gold header for sections */
+  margin-bottom: 10px;
+}
+
+section p {
+  line-height: 1.6;
+  color: #ccc; /* Lighter text color in sections */
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  padding: 5px 0;
+}
+
+/* Media Gallery Styles */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.media-item img {
+  width: 100%;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.media-item img:hover {
+  transform: scale(1.05); /* Hover effect for images */
+}
+
+/* Performance Metrics */
+.metrics {
+  display: flex;
+  gap: 30px;
+}
+
+.metric {
+  flex: 1;
+  background-color: #444; /* Dark background for metric boxes */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.metric h3 {
+  font-size: 1.2rem;
+  color: #FFD700; /* Gold color for metric titles */
+}
+
+.metric p {
+  color: #ccc;
+}
+
+/* Scrollable video section */
+.video-item {
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* Additional Styling for Button-like Links */
+button, .header_signup, .header_login {
+  background-color: #FFD700;
+  color: black;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover, .header_signup:hover, .header_login:hover {
+  background-color: #f7e377; /* Lighter gold hover */
+}

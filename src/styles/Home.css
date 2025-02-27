@@ -1,0 +1,131 @@
+/* Home Page Container */
+.home-container {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #121212;
+  color: #fff;
+}
+
+/* Hero Section */
+.hero-section {
+  background: url("https://via.placeholder.com/1500x800") no-repeat center
+    center/cover;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.hero-text h1 {
+  font-size: 60px;
+  font-weight: 700;
+  margin: 0;
+  color: #ffd700;
+}
+
+.hero-text p {
+  font-size: 20px;
+  color: #ddd;
+  margin-top: 10px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-button {
+  background-color: #ffd700;
+  color: #121212;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #f7e377;
+}
+
+/* Features Section */
+.features-section {
+  text-align: center;
+  padding: 50px 20px;
+  background-color: #1a1a1a;
+}
+
+.features-section h2 {
+  font-size: 36px;
+  color: #ffd700;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.feature {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+.feature h3 {
+  font-size: 24px;
+  color: #ffd700;
+  margin-bottom: 15px;
+}
+
+.feature p {
+  font-size: 16px;
+  color: #ddd;
+}
+
+/* Testimonial Section */
+.testimonial-section {
+  text-align: center;
+  padding: 50px 20px;
+  background-color: #121212;
+}
+
+.testimonial {
+  font-style: italic;
+  font-size: 18px;
+  color: #ddd;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.testimonial span {
+  display: block;
+  margin-top: 10px;
+  font-weight: 600;
+  color: #ffd700;
+}
+
+/* Footer */
+.footer-section {
+  background-color: #1a1a1a;
+  text-align: center;
+  padding: 20px;
+  color: #ddd;
+}
+
+.footer-section p {
+  font-size: 14px;
+}

@@ -1,78 +1,98 @@
 import React from "react";
+import "../styles/Portfolios.css";
 
-function Portfolios() {
+const Portfolio = () => {
   return (
-    <div className="athlete-portfolio">
-      <header>
-        <div className="container">
-          <h1>Athlete Portfolio</h1>
+    <div className="portfolio-container">
+      {/* Portfolio Header */}
+      <div className="portfolio-header">
+        <div className="avatar-img-wrapper">
+          <img
+            src="https://via.placeholder.com/150"
+            alt="Athlete Avatar"
+            className="avatar-img"
+          />
         </div>
-      </header>
-      <main className="container">
-        <section className="profile">
-          <div className="profile-image">
-            <img src="placeholder-profile.jpg" alt="Athlete Profile" />
-          </div>
-          <div className="profile-info">
-            <h2>John Doe</h2>
-            <p>Sport: Basketball</p>
-            <p>Position: Point Guard</p>
-            <p>Location: City, State</p>
-            <p>
-              Bio: A dedicated basketball player with a passion for the game...
-            </p>
-          </div>
-        </section>
-        <section className="stats">
-          <h2>Statistics</h2>
-          <div className="stats-grid">
-            <div className="stat">
-              <h3>Points Per Game</h3>
-              <p>22.5</p>
-            </div>
-            <div className="stat">
-              <h3>Assists Per Game</h3>
-              <p>6.8</p>
-            </div>
-            <div className="stat">
-              <h3>Rebounds Per Game</h3>
-              <p>4.2</p>
-            </div>
-            <div className="stat">
-              <h3>3-Point Percentage</h3>
-              <p>40%</p>
-            </div>
-          </div>
-        </section>
-        <section className="videos">
-          <h2>Highlight Videos</h2>
-          <div className="video-grid">
-            <div className="video">
-              <video src="placeholder-video1.mp4" controls />
-              <p>Game Highlights - Season 2023</p>
-            </div>
-            <div className="video">
-              <video src="placeholder-video2.mp4" controls />
-              <p>Training Session - Dribbling Skills</p>
-            </div>
-          </div>
-        </section>
-        <section className="gallery">
-          <h2>Photo Gallery</h2>
-          <div className="image-grid">
-            <img src="placeholder-image1.jpg" alt="Gallery Image 1" />
-            <img src="placeholder-image2.jpg" alt="Gallery Image 2" />
-            <img src="placeholder-image3.jpg" alt="Gallery Image 3" />
-          </div>
-        </section>
-      </main>
-      <footer>
-        <div className="container">
-          <p>&copy; 2024 Athlete Portfolio</p>
+        <div className="athlete-info">
+          <h1>John Doe</h1>
+          <p>Professional Soccer Player | Midfielder</p>
         </div>
-      </footer>
+      </div>
+
+      {/* About Me Section */}
+      <section>
+        <h2>About Me</h2>
+        <p>
+          I am a passionate soccer player with over 10 years of experience
+          playing at the highest levels. I have a strong work ethic and a drive
+          for success. I am currently seeking new opportunities to take my career
+          to the next level.
+        </p>
+      </section>
+
+      {/* Stats Section */}
+      <section>
+        <h2>Stats</h2>
+        <ul>
+          <li>Games Played: 120</li>
+          <li>Goals: 45</li>
+          <li>Assists: 30</li>
+          <li>Red Cards: 2</li>
+        </ul>
+      </section>
+
+      {/* Media Gallery Section */}
+      <section>
+        <h2>Media Gallery</h2>
+        <div className="media-grid">
+          <div className="media-item">
+            <img
+              src="https://via.placeholder.com/320x180"
+              alt="Game Moment"
+            />
+          </div>
+          <div className="media-item">
+            <img
+              src="https://via.placeholder.com/320x180"
+              alt="Training"
+            />
+          </div>
+          <div className="media-item">
+            <img
+              src="https://via.placeholder.com/320x180"
+              alt="Celebration"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Performance Metrics Section */}
+      <section>
+        <h2>Performance Metrics</h2>
+        <div className="metrics">
+          <div className="metric">
+            <h3>Speed</h3>
+            <p>Top Speed: 25 mph</p>
+          </div>
+          <div className="metric">
+            <h3>Stamina</h3>
+            <p>Average Running Distance: 8 miles per game</p>
+          </div>
+          <div className="metric">
+            <h3>Strength</h3>
+            <p>Squat: 250 lbs</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action (Contact or Recruiter Info) */}
+      <section>
+        <h2>Contact</h2>
+        <p>If you're interested in my profile or want to get in touch, feel free to reach out!</p>
+        <button className="header_signup">Contact Me</button>
+      </section>
     </div>
   );
-}
+};
 
-export default Portfolios;
+export default Portfolio;

@@ -1,0 +1,89 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  background-color: #222;
+}
+
+.login-form {
+  background-color: #333;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-heading {
+  color: #ffd700;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-field {
+  margin-bottom: 20px;
+}
+
+.login-label {
+  color: #fff;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.login-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #555;
+  color: #fff;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: #ffd700;
+}
+
+.login-submit {
+  background-color: #ffd700;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.login-submit:hover {
+  background-color: #f7e377;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 20px;
+  color: darkgray;
+}
+
+.login-link {
+  color: #ffd700;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+.login-forgot-pass {
+  color: #ffd700;
+  text-decoration: none;
+}
+
+.login-forgot-pass:hover {
+  text-decoration: underline;
+}
+
+.login-forgot-wrapper {
+    margin-top: 6px;
+}

@@ -6,6 +6,7 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import UserProfile from './pages/UserProfile'
 import Header from './components/Header'
+import ForgotPass from './components/ForgotPass'
 
 function App() {
 
@@ -16,10 +17,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/about" element={<About/>}/>
-          <Route path="/portfolio" element={<Portfolios/>}/>
+          <Route path="/portfolios" element={<Portfolios/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/signup" element={<Signup/>}/>
           <Route path="/profile" element={<UserProfile/>}/>
+          <Route path="/forgotpass" element={<ForgotPass/>}/>
         </Routes>
       </Router>
     </>
