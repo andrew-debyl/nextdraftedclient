@@ -1,16 +1,36 @@
 import React, { useState } from "react";
-import "../styles/SignUp.css"; 
+import "../styles/SignUp.css";
 
 const SignUp = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    // Add signup logic here (e.g., API call to create user)
+
     if (password === confirmPassword) {
-      console.log("User signed up with:", { email, password });
+      let register_url = "http://127.0.0.1:8000/signup";
+
+      const res = await fetch(register_url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "username": username,
+          "password": password,
+        }),
+      });
+
+      const json = await res.json();
+      if (json.status) {
+        sessionStorage.setItem("username", json.username);
+        window.location.href = window.location.origin;
+      } else if (json.error === "Already Registered") {
+        alert("The user with same username is already registered");
+        window.location.href = window.location.origin;
+      }
     } else {
       console.log("Passwords do not match!");
     }
@@ -22,15 +42,15 @@ const SignUp = () => {
         <h2 className="signup-heading">Sign Up</h2>
         <form onSubmit={handleSignUp}>
           <div className="signup-field">
-            <label htmlFor="email" className="signup-label">
-              Email
+            <label htmlFor="username" className="signup-label">
+              Username
             </label>
             <input
-              type="email"
-              id="email"
+              type="text"
+              id="username"
               className="signup-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
@@ -65,7 +85,12 @@ const SignUp = () => {
           </button>
         </form>
         <div className="signup-footer">
-          <p>Already have an account? <a href="/login" className="signup-link">Login</a></p>
+          <p>
+            Already have an account?{" "}
+            <a href="/login" className="signup-link">
+              Login
+            </a>
+          </p>
         </div>
       </div>
     </div>

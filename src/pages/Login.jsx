@@ -1,21 +1,36 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // useNavigate for redirection
 import "../styles/Login.css";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // For redirecting after successful login
 
-  const handleSubmit = async (e) => {
+  const login_url = "http://127.0.0.1:8000/login";
+
+  const login = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:5000/login", {
-        email,
-        password,
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error logging in:", error);
+
+    const res = await fetch(login_url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.status && json.status === "Authenticated") {
+      sessionStorage.setItem("username", json.username);
+      alert("Successfully logged in");
+      navigate('/') // Replace '/dashboard' with the correct path
+    } else {
+      alert("Authentication failed. Please check your credentials.");
     }
   };
 
@@ -23,17 +38,17 @@ const Login = () => {
     <div className="login-container">
       <div className="login-form">
         <h2 className="login-heading">Login</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={login}>
           <div className="login-field">
-            <label htmlFor="email" className="login-label">
-              Email
+            <label htmlFor="username" className="login-label">
+              Username
             </label>
             <input
-              type="email"
-              id="email"
+              type="text"
+              id="username"
               className="login-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
@@ -57,12 +72,14 @@ const Login = () => {
         <div className="login-footer">
           <p>
             Don't have an account?&nbsp;
-            <Link href="/signup" className="login-link">
+            <Link to="/signup" className="login-link">
               Sign Up
             </Link>
           </p>
           <div className="login-forgot-wrapper">
-            <Link to="/forgotpass" className="login-forgot-pass">Forgot Password</Link>
+            <Link to="/forgotpass" className="login-forgot-pass">
+              Forgot Password
+            </Link>
           </div>
         </div>
       </div>
