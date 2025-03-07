@@ -5,6 +5,12 @@ const SignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("");
+
+  const handleRoleSelect = (selectedRole) => {
+    setRole(selectedRole);
+    setExtraInfo("");
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -18,15 +24,38 @@ const SignUp = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          "username": username,
-          "password": password,
+          username: username,
+          password: password,
         }),
       });
 
       const json = await res.json();
       if (json.status) {
         sessionStorage.setItem("username", json.username);
-        window.location.href = window.location.origin;
+
+        let role_url = "http://127.0.0.1:8000/create_role";
+
+        const roleData = {
+          username: username,
+          role: role,
+        };
+
+        const roleRes = await fetch(role_url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(roleData),
+        });
+
+        const roleJson = await roleRes.json();
+
+        if (roleJson.status) {
+          alert("Success!");
+          window.location.href = window.location.origin;
+        } else {
+          alert("There was an issue creating your profile as a " + role);
+        }
       } else if (json.error === "Already Registered") {
         alert("The user with same username is already registered");
         window.location.href = window.location.origin;
@@ -79,6 +108,26 @@ const SignUp = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
+          </div>
+          <div className="role-selection">
+            <button
+              type="button"
+              className={`role-button ath-margin ${
+                role === "athlete" ? "active" : ""
+              }`}
+              onClick={() => handleRoleSelect("athlete")}
+            >
+              Athlete
+            </button>
+            <button
+              type="button"
+              className={`role-button rec-margin ${
+                role === "recruiter" ? "active" : ""
+              }`}
+              onClick={() => handleRoleSelect("recruiter")}
+            >
+              Recruiter
+            </button>
           </div>
           <button type="submit" className="signup-submit">
             Sign Up

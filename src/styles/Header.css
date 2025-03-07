@@ -17,8 +17,8 @@
 }
 
 .header_logo-wrapper img {
-  height: 54px;
-  transform: scaleY(0.90);
+  width: 80px;
+  transform: scaleY(0.95);
 }
 
 .header_menu {

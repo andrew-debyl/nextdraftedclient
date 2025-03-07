@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo-white.svg";
 import "../styles/Header.css";
 
 function Header() {
   const nagivate = useNavigate();
+  const [username, setUsername] = useState('') 
 
   const logout = async (e) => {
     e.preventDefault();
@@ -24,6 +25,10 @@ function Header() {
       alert("The user could not be logged out.");
     }
   };
+
+  useEffect(() => {
+    setUsername(sessionStorage.getItem('username'));
+  },[])
 
   return (
     <header className="header">
@@ -52,7 +57,7 @@ function Header() {
                 </Link>
               </li>
               <li>
-                <Link to="/" className="header_item">
+                <Link to={`/profile/${username}`} className="header_item">
                   USER PROFILE
                 </Link>
               </li>
