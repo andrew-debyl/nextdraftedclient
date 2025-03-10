@@ -27,6 +27,7 @@ const Login = () => {
 
     if (json.status && json.status === "Authenticated") {
       sessionStorage.setItem("username", json.username);
+      sessionStorage.setItem("userType", json.userType);
       alert("Successfully logged in");
       navigate('/') // Replace '/dashboard' with the correct path
       window.location.reload();
