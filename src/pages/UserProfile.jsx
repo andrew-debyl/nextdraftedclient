@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "../styles/UserProfile.css"
+import { useParams } from "react-router-dom";
+import "../styles/UserProfile.css";
 
 const UserProfile = () => {
-  const [profile, setProfile] = useState({
-    first_name: "",
-    last_name: "",
-    bio: "",
-    sport: "",
-  });
+  const [profile, setProfile] = useState({});
+
+  const { username } = useParams();
+  let profile_url = `http://127.0.0.1:8000/profile/${username}`;
+
+  const get_profile = async () => {
+    const res = await fetch(profile_url, {
+      method: "GET",
+    });
+
+    const retobj = await res.json();
+    setProfile(retobj);
+  };
+
+  useEffect(() => {
+    get_profile();
+  }, []);
 
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    // Fetch the profile data on component mount
-    axios
-      .get("/api/profile/")
-      .then((response) => {
-        setProfile(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching profile:", error);
-      });
-  }, []);
-
+  /*
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProfile((prevProfile) => ({
@@ -56,18 +56,39 @@ const UserProfile = () => {
       .catch((error) => {
         console.error("Error updating profile:", error);
       });
-  };
+  };*/
 
   return (
     <div className="portfolio-container">
       <div className="portfolio-header">
+        <img
+          alt="Athlete Avatar"
+          className="avatar-img"
+        />
         <div className="athlete-info">
           <h1>
             {profile.first_name} {profile.last_name}
           </h1>
-          <p>{profile.sport}</p>
-          <p>{profile.bio}</p>
+          <p>@{profile.username}</p>
+          <div className="additional-info">
+            <p>
+              <b>Sport(s):</b> {profile.sport}
+            </p>
+            <p>
+              <b>Height:</b> {String(profile.height).replace('.', "'") + '"'}
+            </p>
+            <p>
+              <b>Weight:</b> {profile.weight} lbs
+            </p>
+            <p>
+              <b>Location:</b> {profile.location}
+            </p>
+          </div>
         </div>
+      </div>
+      <div className="bio-section">
+        <h2>About Me</h2>
+        <p>{profile.bio}</p>
       </div>
 
       {isEditing ? (

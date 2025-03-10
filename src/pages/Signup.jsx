@@ -9,9 +9,8 @@ const SignUp = () => {
 
   const handleRoleSelect = (selectedRole) => {
     setRole(selectedRole);
-    setExtraInfo("");
   };
-
+  
   const handleSignUp = async (e) => {
     e.preventDefault();
 

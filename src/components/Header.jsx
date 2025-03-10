@@ -58,7 +58,7 @@ function Header() {
               </li>
               <li>
                 <Link to={`/profile/${username}`} className="header_item">
-                  USER PROFILE
+                  PROFILE
                 </Link>
               </li>
               <li>

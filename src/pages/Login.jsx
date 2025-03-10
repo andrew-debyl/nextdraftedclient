@@ -29,6 +29,7 @@ const Login = () => {
       sessionStorage.setItem("username", json.username);
       alert("Successfully logged in");
       navigate('/') // Replace '/dashboard' with the correct path
+      window.location.reload();
     } else {
       alert("Authentication failed. Please check your credentials.");
     }
