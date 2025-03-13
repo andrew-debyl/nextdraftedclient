@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // useNavigate for redirection
+import { Link, useNavigate } from "react-router-dom"; 
 import "../styles/Login.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // For redirecting after successful login
+  const navigate = useNavigate(); 
 
   const login_url = "http://127.0.0.1:8000/login";
 
   const login = async (e) => {
     e.preventDefault();
-
+  
     const res = await fetch(login_url, {
       method: "POST",
       headers: {

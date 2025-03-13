@@ -71,7 +71,7 @@
 
 .profile-bio {
   line-height: 1.7;
-  margin-bottom: 20px;
+  margin-bottom: 35px;
 }
 
 .edit-profile-section {
@@ -82,30 +82,38 @@
 }
 
 .edit-profile-item {
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
   display: flex;
-  align-items: center;
+  flex-direction: column; /* Change to column layout */
+  align-items: flex-start; /* Align items to the left */
 }
 
 .edit-profile-title {
-  width: 100px; 
-  display: inline-block;
+  width: 100px;
+  display: block; /* Change to block display */
+  margin-bottom: 5px; /* Add margin for spacing */
 }
 
 .edit-profile-input {
-  width: calc(100% - 160px);
+  width: calc(100% - 0px); /* Adjust the width */
   padding: 10px;
   border: 1px solid #555;
   border-radius: 5px;
   background-color: #444;
   color: #fff;
-  margin-left: 10px; 
 }
 
 .edit-profile-input:focus {
   outline: none;
   border-color: #FFD700;
 }
+
+.error-message {
+  color: red;
+  margin-top: 5px; /* Add margin for spacing between input and error */
+  font-size: 0.9rem; /* Adjust font size if needed */
+}
+
 
 .profile-save_button,
 .profile-edit_button,
@@ -127,4 +135,44 @@
 .profile-save_button:hover,
 .profile-edit_button:hover {
   background-color: #FFC107;
+}
+
+.profile-edit {
+  margin-top: 60px;
+}
+
+.profile-contact-wrapper {
+  display: flex;
+  flex-direction: column; /* Stack contact and social links vertically */
+  gap: 15px; /* Add space between contact and social sections */
+}
+
+.contact-info {
+  display: flex;
+  align-items: center; /* Vertically align icons */
+  gap: 20px; /* Add space between contact icons */
+  margin-bottom: 20px;
+}
+
+.contact-icon,
+.social-icon {
+  color: #fff;
+  font-size: 1.8rem; /* Increase icon size for better visibility */
+  transition: color 0.3s ease;
+}
+
+.contact-icon:hover,
+.social-icon:hover {
+  color: #FFC107;
+}
+
+.social-links {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+  gap: 20px; /* Add space between social icons */
+}
+
+.profile-contact-title{
+  color: #FFD700;
+  font-size: 1.8rem;
 }

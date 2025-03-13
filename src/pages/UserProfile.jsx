@@ -11,6 +11,7 @@ const UserProfile = () => {
   const { username } = useParams();
   const navigate = useNavigate();
   const userType = sessionStorage.getItem("userType");
+  const [formErrors, setFormErrors] = useState({});
 
   let profile_url = `http://127.0.0.1:8000/profile/${username}`;
 
@@ -25,14 +26,13 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    const loggedInUser = sessionStorage.getItem("username"); // Adjust this to your auth method
+    const loggedInUser = sessionStorage.getItem("username");
     if (!loggedInUser) {
       navigate("/login"); // Redirect to login if not authenticated
       return;
     }
 
     if (loggedInUser !== username) {
-      // If the logged-in user is not accessing their own profile
       alert("You can only edit your own profile.");
       navigate(`/profile/${loggedInUser}`); // Redirect to their profile
       window.location.reload();
@@ -43,19 +43,92 @@ const UserProfile = () => {
   }, []);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    let errors = { ...formErrors };
+
+    if (name === "email") {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (value && !emailRegex.test(value)) { // Check if value is not empty first
+            errors[name] = "Invalid email format";
+        } else {
+            delete errors[name];
+        }
+    } else if (name === "phone_number") {
+        const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
+        if (value && !phoneRegex.test(value)) {
+            errors[name] = "Invalid phone number";
+        } else {
+            delete errors[name];
+        }
+    } else if (["instagram", "linkedin", "youtube", "facebook"].includes(name)) {
+        if (value) {
+            if (value.startsWith("http://") || value.startsWith("https://")) {
+                try {
+                    new URL(value);
+                    delete errors[name];
+                } catch (e) {
+                    errors[name] = "Invalid URL";
+                }
+            } else {
+                const domainRegex = /^(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (domainRegex.test(value)) {
+                    delete errors[name];
+                } else {
+                    errors[name] = "Invalid URL";
+                }
+            }
+        } else {
+            delete errors[name];
+        }
+    }
+
     setEditedProfile({
-      ...editedProfile,
-      [e.target.name]: e.target.value,
+        ...editedProfile,
+        [name]: value,
     });
-  };
+
+    setFormErrors(errors);
+};
 
   const handleSave = async () => {
-    const profileData = JSON.stringify(editedProfile);
+    if (Object.keys(formErrors).length > 0) {
+      alert("Please correct the form errors before saving.");
+      return;
+    }
+
+    const formData = new FormData();
+    const editedProfileCopy = { ...editedProfile };
+
+    Object.keys(editedProfileCopy).forEach((key) => {
+      if (
+        ["instagram", "linkedin", "youtube", "facebook"].includes(key) &&
+        editedProfileCopy[key]
+      ) {
+        if (
+          !editedProfileCopy[key].startsWith("http://") &&
+          !editedProfileCopy[key].startsWith("https://")
+        ) {
+          editedProfileCopy[key] = `https://${editedProfileCopy[key]}`;
+        }
+      }
+      if (key === "profile_picture") {
+        if (editedProfileCopy[key] instanceof File) {
+          formData.append(key, editedProfileCopy[key]);
+        } else {
+          formData.append(key, null);
+        }
+      } else if (
+        editedProfileCopy[key] !== undefined &&
+        editedProfileCopy[key] !== null
+      ) {
+        formData.append(key, editedProfileCopy[key]);
+      }
+    });
 
     try {
-      const response = await fetch(profile_url+'/update', {
+      const response = await fetch(profile_url + "/update", {
         method: "PUT",
-        body: profileData,
+        body: formData,
       });
 
       if (response.ok) {
@@ -72,9 +145,31 @@ const UserProfile = () => {
   return (
     <div className="profile-container">
       {userType === "Athlete" ? (
-        <AthleteProfile handleSave={handleSave} handleChange={handleChange} profile={profile} isEditing={isEditing} editedProfile={editedProfile} setIsEditing={setIsEditing}/>
+        <AthleteProfile
+          handleSave={handleSave}
+          handleChange={handleChange}
+          profile={profile}
+          isEditing={isEditing}
+          editedProfile={editedProfile}
+          setIsEditing={setIsEditing}
+          setEditedProfile={setEditedProfile}
+          username={username}
+          formErrors={formErrors}
+          setFormErrors={setFormErrors}
+        />
       ) : userType === "Recruiter" ? (
-        <RecruiterProfile handleSave={handleSave} handleChange={handleChange} profile={profile} isEditing={isEditing} editedProfile={editedProfile}setIsEditing={setIsEditing}/>
+        <RecruiterProfile
+          handleSave={handleSave}
+          handleChange={handleChange}
+          profile={profile}
+          isEditing={isEditing}
+          editedProfile={editedProfile}
+          setIsEditing={setIsEditing}
+          setEditedProfile={setEditedProfile}
+          username={username}
+          formErrors={formErrors}
+          setFormErrors={setFormErrors}
+        />
       ) : (
         <>Please Login To See</>
       )}
