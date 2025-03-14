@@ -56,7 +56,7 @@ function AthleteProfile({
       setIsEditing(true);
     }
   };
-
+  
   return (
     <>
       <div className="profile-header">
@@ -70,28 +70,49 @@ function AthleteProfile({
             {profile.first_name} {profile.last_name}
           </h1>
           <p className="profile-info_username">@{username}</p>
-          <p className="profile-info_gender">
-            {profile.gender} - {calculateAge(profile.birth_date)}
-          </p>
           <div className="profile-moreinfo_wrapper">
-            <p className="profile-moreinfo_item">
-              <b>Sport(s):</b> {profile.sport}
-            </p>
-            <p className="profile-moreinfo_item">
-              <b>Height:</b> {String(profile.height).replace(".", "'") + '"'}
-            </p>
-            <p className="profile-moreinfo_item">
-              <b>Weight:</b> {profile.weight} lbs
-            </p>
-            <p className="profile-moreinfo_item">
-              <b>Location:</b> {profile.location}
-            </p>
+            {profile.sport !== null && (
+              <p className="profile-moreinfo_item">
+                <b>Sport(s):</b> {profile.sport}
+              </p>
+            )}
+            {profile.height !== null && (
+              <p className="profile-moreinfo_item">
+                <b>Height:</b> {String(profile.height).replace(".", "'") + '"'}
+              </p>
+            )}
+            {profile.weight !== null && (
+              <p className="profile-moreinfo_item">
+                <b>Weight:</b> {profile.weight} lbs
+              </p>
+            )}
+            {profile.location !== "" && (
+              <p className="profile-moreinfo_item">
+                <b>Location:</b> {profile.location}
+              </p>
+            )}
+            {profile.gender && (
+              <p className="profile-moreinfo_item">
+                <b>Gender:</b>{" "}
+                {profile.gender.charAt(0).toUpperCase() +
+                  profile.gender.slice(1)}
+              </p>
+            )}
+            {profile.birth_date !== null && (
+              <p className="profile-moreinfo_item">
+                <b>Age:</b> {calculateAge(profile.birth_date)}
+              </p>
+            )}
           </div>
         </div>
       </div>
       <div className="profile-bio-wrapper">
-        <h2 className="profile-bio_title">About Me</h2>
-        <p className="profile-bio">{profile.bio}</p>
+        {profile.bio !== "" && (
+          <>
+            <h2 className="profile-bio_title">About Me</h2>
+            <p className="profile-bio">{profile.bio}</p>
+          </>
+        )}
         <div className="profile-contact-wrapper">
           {(profile.email || profile.phone_number) && (
             <>
@@ -172,7 +193,7 @@ function AthleteProfile({
               <input
                 type="text"
                 name="first_name"
-                value={editedProfile.first_name}
+                value={editedProfile.first_name || ""}
                 onChange={handleChange}
                 placeholder="First Name"
                 className="edit-profile-input"
@@ -183,7 +204,7 @@ function AthleteProfile({
               <input
                 type="text"
                 name="last_name"
-                value={editedProfile.last_name}
+                value={editedProfile.last_name || ""}
                 onChange={handleChange}
                 placeholder="Last Name"
                 className="edit-profile-input"
@@ -193,7 +214,7 @@ function AthleteProfile({
               <b className="edit-profile-title">Bio: </b>
               <textarea
                 name="bio"
-                value={editedProfile.bio}
+                value={editedProfile.bio || ""}
                 onChange={handleChange}
                 placeholder="Bio"
                 className="edit-profile-input"
@@ -204,7 +225,7 @@ function AthleteProfile({
               <input
                 type="text"
                 name="sport"
-                value={editedProfile.sport}
+                value={editedProfile.sport || ""}
                 onChange={handleChange}
                 placeholder="Sport"
                 className="edit-profile-input"
@@ -215,7 +236,7 @@ function AthleteProfile({
               <input
                 type="text"
                 name="height"
-                value={editedProfile.height}
+                value={editedProfile.height || ""}
                 onChange={handleChange}
                 placeholder="Height"
                 className="edit-profile-input"
@@ -226,7 +247,7 @@ function AthleteProfile({
               <input
                 type="text"
                 name="weight"
-                value={editedProfile.weight}
+                value={editedProfile.weight || ""}
                 onChange={handleChange}
                 placeholder="Weight"
                 className="edit-profile-input"
@@ -247,7 +268,7 @@ function AthleteProfile({
               <input
                 type="text"
                 name="location"
-                value={editedProfile.location}
+                value={editedProfile.location || ""}
                 onChange={handleChange}
                 placeholder="Location"
                 className="edit-profile-input"
@@ -257,10 +278,11 @@ function AthleteProfile({
               <b className="edit-profile-title">Gender: </b>
               <select
                 name="gender"
-                value={editedProfile.gender}
+                value={editedProfile.gender || ""}
                 onChange={handleChange}
                 className="edit-profile-input"
               >
+                <option value="">---</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="other">Other</option>
@@ -285,7 +307,7 @@ function AthleteProfile({
               <input
                 type="text"
                 name="phone_number"
-                value={editedProfile.phone_number}
+                value={editedProfile.phone_number || ""}
                 onChange={handleChange}
                 placeholder="Phone Number"
                 className="edit-profile-input"
@@ -299,7 +321,7 @@ function AthleteProfile({
               <input
                 type="text"
                 name="instagram"
-                value={editedProfile.instagram}
+                value={editedProfile.instagram || ""}
                 onChange={handleChange}
                 placeholder="Instagram"
                 className="edit-profile-input"
@@ -313,7 +335,7 @@ function AthleteProfile({
               <input
                 type="text"
                 name="linkedin"
-                value={editedProfile.linkedin}
+                value={editedProfile.linkedin || ""}
                 onChange={handleChange}
                 placeholder="Linkedin"
                 className="edit-profile-input"
@@ -327,7 +349,7 @@ function AthleteProfile({
               <input
                 type="text"
                 name="youtube"
-                value={editedProfile.youtube}
+                value={editedProfile.youtube || ""}
                 onChange={handleChange}
                 placeholder="Youtube"
                 className="edit-profile-input"
@@ -341,7 +363,7 @@ function AthleteProfile({
               <input
                 type="text"
                 name="facebook"
-                value={editedProfile.facebook}
+                value={editedProfile.facebook || ""}
                 onChange={handleChange}
                 placeholder="Facebook"
                 className="edit-profile-input"

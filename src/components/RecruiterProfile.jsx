@@ -53,26 +53,44 @@ function RecruiterProfile({
             {profile.first_name} {profile.last_name}
           </h1>
           <p className="profile-info_username">@{username}</p>
-          <p className="profile-info_gender">{profile.gender}</p>
           <div className="profile-moreinfo_wrapper">
-            <p className="profile-moreinfo_item">
-              <b>Organization: </b> {profile.organization}
-            </p>
-            <p className="profile-moreinfo_item">
-              <b>Title: </b> {profile.title}
-            </p>
-            <p className="profile-moreinfo_item">
-              <b>Sport(s):</b> {profile.sport}
-            </p>
-            <p className="profile-moreinfo_item">
-              <b>Location:</b> {profile.location}
-            </p>
+            {profile.organization !== "" && (
+              <p className="profile-moreinfo_item">
+                <b>Organization: </b> {profile.organization}
+              </p>
+            )}
+            {profile.title !== "" && (
+              <p className="profile-moreinfo_item">
+                <b>Title: </b> {profile.title}
+              </p>
+            )}
+            {profile.sport !== null && (
+              <p className="profile-moreinfo_item">
+                <b>Sport(s):</b> {profile.sport}
+              </p>
+            )}
+            {profile.location !== "" && (
+              <p className="profile-moreinfo_item">
+                <b>Location:</b> {profile.location}
+              </p>
+            )}
+            {profile.gender && (
+              <p className="profile-moreinfo_item">
+                <b>Gender:</b>{" "}
+                {profile.gender.charAt(0).toUpperCase() +
+                  profile.gender.slice(1)}
+              </p>
+            )}
           </div>
         </div>
       </div>
       <div className="profile-bio-wrapper">
-        <h2 className="profile-bio_title">About Me</h2>
-        <p className="profile-bio">{profile.bio}</p>
+        {profile.bio !== "" && (
+          <>
+            <h2 className="profile-bio_title">About Me</h2>
+            <p className="profile-bio">{profile.bio}</p>
+          </>
+        )}
         <div className="profile-contact-wrapper">
           {(profile.email || profile.phone_number) && (
             <>
