@@ -7,6 +7,7 @@ const Portfolio = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const { username } = useParams();
+  const loggedInUser = sessionStorage.getItem("username");
 
   let portfolios_url = `http://127.0.0.1:8000/portfolios/${username}`;
 
@@ -33,9 +34,11 @@ const Portfolio = () => {
         <h2 className="portfolios-heading-title">
           {firstName} {lastName}'s Portfolios
         </h2>
-        <div>
-          <button className="portfolios-heading-btn">ADD PORTFOLIO</button>
-        </div>
+        {loggedInUser === username && (
+          <div>
+            <button className="portfolios-heading-btn">ADD PORTFOLIO</button>
+          </div>
+        )}
       </div>
       <div className="portfolios-container">
         {portfolios &&

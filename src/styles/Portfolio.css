@@ -1,16 +1,14 @@
-/* General Portfolio Styles (updated) */
 .portfolio-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #222; /* Dark background to match header */
+  background-color: #222;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: white; /* White text to match header */
+  color: white;
 }
 
-/* Portfolio Header Section (matching header style) */
 .portfolio-header {
   display: flex;
   align-items: center;
@@ -18,106 +16,96 @@
   margin-bottom: 20px;
 }
 
-.avatar-img {
+.portfolio-img {
   border-radius: 50%;
   width: 150px;
   height: 150px;
   object-fit: cover;
-  border: 4px solid #FFD700; /* Gold border to match the header button */
+  border: 4px solid #ffd700;
 }
 
-.athlete-info {
+.portfolio-athlete-info {
   max-width: 600px;
 }
 
-.athlete-info h1 {
+.portfolio-athlete-info h1 {
   font-size: 2rem;
   margin: 0;
-  color: #FFD700; /* Gold color for the name */
+  color: #ffd700;
 }
 
-.athlete-info p {
-  color: #ddd; /* Slightly lighter text color for readability */
+.portfolio-athlete-info p {
+  color: #ddd;
 }
 
-/* Section Styles */
-section {
+.portfolio-section {
   margin-bottom: 30px;
   padding: 20px;
-  background-color: #333; /* Darker background for sections */
+  background-color: #333;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-section h2 {
+.portfolio-section_title {
   font-size: 1.5rem;
-  color: #FFD700; /* Gold header for sections */
+  color: #ffd700;
   margin-bottom: 10px;
 }
 
-section p {
+.portfolio-section_para {
   line-height: 1.6;
-  color: #ccc; /* Lighter text color in sections */
+  color: #ccc;
 }
 
-ul {
+.portfolio-list {
   list-style-type: none;
   padding: 0;
 }
 
-ul li {
+.portfolio-list_item {
   padding: 5px 0;
 }
 
-/* Media Gallery Styles */
-.media-grid {
+.portfolio-media-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
 }
 
-.media-item img {
+.portfolio-media-item img {
   width: 100%;
   border-radius: 8px;
   transition: transform 0.3s ease;
 }
 
-.media-item img:hover {
-  transform: scale(1.05); /* Hover effect for images */
+.portfolio-media-item img:hover {
+  transform: scale(1.05);
 }
 
-/* Performance Metrics */
-.metrics {
+.portfolio-metrics {
   display: flex;
   gap: 30px;
 }
 
-.metric {
+.portfolio-metric {
   flex: 1;
-  background-color: #444; /* Dark background for metric boxes */
+  background-color: #444;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.metric h3 {
+.portfolio-metric h3 {
   font-size: 1.2rem;
-  color: #FFD700; /* Gold color for metric titles */
+  color: #ffd700;
 }
 
-.metric p {
+.portfolio-metric p {
   color: #ccc;
 }
 
-/* Scrollable video section */
-.video-item {
-  max-width: 320px;
-  margin: 0 auto;
-}
-
-/* Additional Styling for Button-like Links */
-button, .header_signup, .header_login {
-  background-color: #FFD700;
+.portfolio-button {
+  background-color: #ffd700;
   color: black;
   padding: 10px 15px;
   border-radius: 5px;
@@ -126,6 +114,82 @@ button, .header_signup, .header_login {
   cursor: pointer;
 }
 
-button:hover, .header_signup:hover, .header_login:hover {
-  background-color: #f7e377; /* Lighter gold hover */
+.portfolio-button:hover {
+  background-color: #f7e377;
+}
+
+.portfolio-edit-text {
+  background-color: #444;
+  color: white;
+  border: 1px solid #666;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: inherit;
+  margin-bottom: 8px;
+  font-size: 1.2rem;
+}
+
+.portfolio-edit-textarea {
+  background-color: #444;
+  color: white;
+  border: 1px solid #666;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: inherit;
+  min-height: 200px;
+}
+
+.portfolio-edit-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.portfolio-section ul li input[type="text"] {
+  display: inline;
+  width: auto;
+  margin-right: 5px;
+}
+
+.draggable-item {
+  user-select: none;
+  cursor: grab;
+  padding: 8px 15px; 
+  border-bottom: 1px solid #555; 
+  display: flex;
+  align-items: baseline; 
+}
+
+.draggable-item:last-child {
+  border-bottom: none;
+}
+
+.draggable-item:hover {
+  background-color: #444;
+}
+
+.draggable-item:active {
+  cursor: grabbing;
+}
+
+.dragging {
+  border: 2px dashed #FFD700 !important;
+  background-color: #555;
+}
+
+.drag-handle {
+  cursor: grab;
+  margin-right: 10px;
+  font-size: 1.1em;
+  color: #aaa;
+}
+
+.draggable-item:active .drag-handle {
+  cursor: grabbing;
 }

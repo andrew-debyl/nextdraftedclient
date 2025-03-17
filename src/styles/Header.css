@@ -53,6 +53,7 @@
   border-radius: 5px;
   text-decoration: none;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .header_signup:hover,

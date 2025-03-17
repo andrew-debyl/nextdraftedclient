@@ -19,6 +19,8 @@ function AthleteProfile({
   formErrors,
   setFormErrors,
 }) {
+  const loggedInUser = sessionStorage.getItem("username");
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -56,7 +58,7 @@ function AthleteProfile({
       setIsEditing(true);
     }
   };
-  
+
   return (
     <>
       <div className="profile-header">
@@ -390,11 +392,15 @@ function AthleteProfile({
           </section>
         </div>
       ) : (
-        <div className="profile-edit">
-          <button className="profile-edit_button" onClick={handleClose}>
-            Edit Profile
-          </button>
-        </div>
+        <>
+          {loggedInUser === username && (
+            <div className="profile-edit">
+              <button className="profile-edit_button" onClick={handleClose}>
+                Edit Profile
+              </button>
+            </div>
+          )}
+        </>
       )}
     </>
   );

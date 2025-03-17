@@ -4,7 +4,7 @@ import logo from "../assets/logo-white.svg";
 import "../styles/Header.css";
 
 function Header() {
-  const nagivate = useNavigate();
+  const navigate = useNavigate();
   const [username, setUsername] = useState('') 
 
   const logout = async (e) => {
@@ -18,9 +18,8 @@ function Header() {
     if (json) {
       let username = sessionStorage.getItem("username");
       sessionStorage.removeItem("username");
-      window.location.href = window.location.origin;
-      window.location.reload();
       alert("Logging out " + username + "...");
+      navigate('/login', { replace: true });
     } else {
       alert("The user could not be logged out.");
     }

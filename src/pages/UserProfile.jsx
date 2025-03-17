@@ -26,19 +26,6 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    const loggedInUser = sessionStorage.getItem("username");
-    if (!loggedInUser) {
-      navigate("/login"); // Redirect to login if not authenticated
-      return;
-    }
-
-    if (loggedInUser !== username) {
-      alert("You can only edit your own profile.");
-      navigate(`/profile/${loggedInUser}`); // Redirect to their profile
-      window.location.reload();
-      return;
-    }
-
     get_profile();
   }, []);
 
