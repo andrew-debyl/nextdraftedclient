@@ -47,48 +47,52 @@ const UserProfile = () => {
     let errors = { ...formErrors };
 
     if (name === "email") {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (value && !emailRegex.test(value)) { // Check if value is not empty first
-            errors[name] = "Invalid email format";
-        } else {
-            delete errors[name];
-        }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (value && !emailRegex.test(value)) {
+        // Check if value is not empty first
+        errors[name] = "Invalid email format";
+      } else {
+        delete errors[name];
+      }
     } else if (name === "phone_number") {
-        const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
-        if (value && !phoneRegex.test(value)) {
-            errors[name] = "Invalid phone number";
-        } else {
+      const phoneRegex =
+        /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
+      if (value && !phoneRegex.test(value)) {
+        errors[name] = "Invalid phone number";
+      } else {
+        delete errors[name];
+      }
+    } else if (
+      ["instagram", "linkedin", "youtube", "facebook"].includes(name)
+    ) {
+      if (value) {
+        if (value.startsWith("http://") || value.startsWith("https://")) {
+          try {
+            new URL(value);
             delete errors[name];
-        }
-    } else if (["instagram", "linkedin", "youtube", "facebook"].includes(name)) {
-        if (value) {
-            if (value.startsWith("http://") || value.startsWith("https://")) {
-                try {
-                    new URL(value);
-                    delete errors[name];
-                } catch (e) {
-                    errors[name] = "Invalid URL";
-                }
-            } else {
-                const domainRegex = /^(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                if (domainRegex.test(value)) {
-                    delete errors[name];
-                } else {
-                    errors[name] = "Invalid URL";
-                }
-            }
+          } catch (e) {
+            errors[name] = "Invalid URL";
+          }
         } else {
+          const domainRegex = /^(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          if (domainRegex.test(value)) {
             delete errors[name];
+          } else {
+            errors[name] = "Invalid URL";
+          }
         }
+      } else {
+        delete errors[name];
+      }
     }
 
     setEditedProfile({
-        ...editedProfile,
-        [name]: value,
+      ...editedProfile,
+      [name]: value,
     });
 
     setFormErrors(errors);
-};
+  };
 
   const handleSave = async () => {
     if (Object.keys(formErrors).length > 0) {

@@ -42,7 +42,7 @@ function Header() {
             </div>
             <ul className="header_menu">
               <li>
-                <Link to="/portfolios" className="header_item">
+                <Link to={`/portfolios/${username}`} className="header_item">
                   PORTFOLIOS
                 </Link>
               </li>
