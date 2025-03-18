@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "../styles/Portfolios.css";
+import tempPhoto from '../assets/tempPhoto.png'
 
 const Portfolio = () => {
   const [portfolios, setPortfolios] = useState([]);
@@ -62,7 +63,7 @@ const Portfolio = () => {
                 </div>
                 <div className="portfolios-img-wrapper">
                   <img
-                    src={`http://127.0.0.1:8000${portfolio.portfolio_image}`}
+                    src={portfolio.portfolio_image ? `http://127.0.0.1:8000${portfolio.portfolio_image}` : tempPhoto}
                     alt={portfolio.title}
                     className="portfolios-img"
                   />
