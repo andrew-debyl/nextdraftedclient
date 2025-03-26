@@ -90,20 +90,63 @@
   color: #eee;
 }
 
-.portfolio-media-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+.portfolio-media-list {
+  display: flex;
   gap: 20px;
 }
 
-.portfolio-media-item img {
-  width: 100%;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
+.portfolio-media-grid {
+  display: flex;
+  gap: 20px;
 }
 
-.portfolio-media-item img:hover {
+.portfolio-media-item {
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.portfolio-media-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.portfolio-media-img-edit {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  cursor: grab;
+}
+
+.portfolio-media-img:hover {
   transform: scale(1.05);
+}
+
+.portfolio-media-x {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  border-radius: 50px;
+  padding: 6px 9px;
+  background-color: #e74c3c;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.portfolio-media-x:hover {
+  background-color: #aa2929;
 }
 
 .portfolio-media-add {
@@ -117,6 +160,8 @@
   border: none;
   color: #eee;
   transition: all 300ms ease;
+  height: 200px;
+  width: 200px;
 }
 
 .portfolio-media-add:hover {
@@ -198,10 +243,10 @@
 .draggable-item {
   user-select: none;
   cursor: grab;
-  padding: 8px 15px; 
-  border-bottom: 1px solid #555; 
+  padding: 8px 15px;
+  border-bottom: 1px solid #555;
   display: flex;
-  align-items: baseline; 
+  align-items: baseline;
 }
 
 .draggable-item:last-child {
@@ -217,7 +262,7 @@
 }
 
 .dragging {
-  border: 2px dashed #FFD700 !important;
+  border: 2px dashed #ffd700 !important;
   background-color: #555;
 }
 
@@ -234,12 +279,12 @@
 
 .portfolio-contact-wrapper {
   display: flex;
-  flex-direction: column; 
-  gap: 15px; 
+  flex-direction: column;
+  gap: 15px;
 }
 
-.portfolio-contact-title{
-  color: #FFD700;
+.portfolio-contact-title {
+  color: #ffd700;
   font-size: 24px;
 }
 
@@ -247,17 +292,17 @@
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; 
+  align-items: flex-start;
 }
 
 .edit-portfolio-title {
-  display: block; 
+  display: block;
   margin-bottom: 5px;
   font-size: 20px;
 }
 
 .edit-portfolio-input {
-  width: calc(100% - 0px); 
+  width: calc(100% - 0px);
   padding: 15px;
   border: 1px solid #555;
   border-radius: 5px;

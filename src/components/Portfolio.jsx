@@ -31,9 +31,12 @@ function Portfolio() {
   const [editablePortfolio, setEditablePortfolio] = useState({});
   const [editableStatsData, setEditableStatsData] = useState([]);
   const [editableMetricsData, setEditableMetricsData] = useState([]);
+  const [editableImageData, setEditableImageData] = useState([]);
   const loggedInUser = sessionStorage.getItem("username");
   const fileInputRef = useRef(null);
+  const photosInputRef = useRef(null);
   const [isHovering, setIsHovering] = useState(false);
+  const [newImages, setNewImages] = useState([]);
 
   let portfolio_url = `http://127.0.0.1:8000/portfolios/${username}/${portfolioId}`;
 
@@ -43,6 +46,7 @@ function Portfolio() {
     });
 
     const retobj = await res.json();
+
     if (retobj.portfolios) {
       setPortfolio(retobj.portfolios);
       setFirstName(retobj.first_name);
@@ -58,6 +62,11 @@ function Portfolio() {
           .sort((a, b) => a.order - b.order)
       );
       setImageData(
+        retobj.items
+          .filter((item) => item.category === "image")
+          .sort((a, b) => a.order - b.order)
+      );
+      setEditableImageData(
         retobj.items
           .filter((item) => item.category === "image")
           .sort((a, b) => a.order - b.order)
@@ -94,7 +103,7 @@ function Portfolio() {
       behavior: "smooth",
     });
   };
-
+console.log(imageData)
   const handleSaveClick = async () => {
     const updatedPortfolioData = { ...editablePortfolio };
     const formData = new FormData();
@@ -130,8 +139,25 @@ function Portfolio() {
         order: index, // Update order based on current position
         category: "metrics",
       }));
+      const updatedImageData = editableImageData.map((item, index) => ({
+        ...item,
+        order: index, // Update order based on current position
+        category: "image",
+      }));
 
       const allItems = [...updatedStatsData, ...updatedMetricsData];
+
+      if (editableImageData) {
+        await Promise.all(
+          updatedImageData.map(async (item) => {
+            await fetch(portfolio_url + `/items/${item.id}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ order: item.order }),
+            });
+          })
+        );
+      }
 
       await Promise.all(
         allItems.map(async (item) => {
@@ -146,25 +172,37 @@ function Portfolio() {
         })
       );
 
-      const originalStatsIds = statsData
-        .map((item) => item.id)
-        .filter((id) => id);
-      const currentStatsIds = updatedStatsData
-        .map((item) => item.id)
-        .filter((id) => id);
-      const statsToDelete = originalStatsIds.filter(
-        (id) => !currentStatsIds.includes(id)
+      await Promise.all(
+        newImages.map(async (file) => {
+          const formData = new FormData();
+          formData.append("sport_portfolio", portfolioId);
+          formData.append("category", "image");
+          formData.append("image", file);
+          await fetch(portfolio_url + `/items`, {
+            method: "POST",
+            body: formData,
+          });
+        })
       );
 
-      const originalMetricsIds = metricsData
+      const statsToDelete = statsData
         .map((item) => item.id)
-        .filter((id) => id);
-      const currentMetricsIds = updatedMetricsData
+        .filter(
+          (id) => !updatedStatsData.some((updatedItem) => updatedItem.id === id)
+        );
+
+      const metricsToDelete = metricsData
         .map((item) => item.id)
-        .filter((id) => id);
-      const metricsToDelete = originalMetricsIds.filter(
-        (id) => !currentMetricsIds.includes(id)
-      );
+        .filter(
+          (id) =>
+            !updatedMetricsData.some((updatedItem) => updatedItem.id === id)
+        );
+
+      const imagesToDelete = imageData
+        .map((item) => item.id)
+        .filter(
+          (id) => !updatedImageData.some((updatedItem) => updatedItem.id === id)
+        );
 
       await Promise.all([
         ...statsToDelete.map((id) =>
@@ -173,10 +211,14 @@ function Portfolio() {
         ...metricsToDelete.map((id) =>
           fetch(portfolio_url + `/items/${id}`, { method: "DELETE" })
         ),
+        ...imagesToDelete.map((id) =>
+          fetch(portfolio_url + `/items/${id}`, { method: "DELETE" })
+        ),
       ]);
 
       get_portfolio();
       setIsEditing(false);
+      setNewImages([]);
     } catch (error) {
       console.error("Error updating portfolio:", error);
     }
@@ -252,11 +294,21 @@ function Portfolio() {
     const reorderedMetrics = Array.from(editableMetricsData);
     const [movedMetric] = reorderedMetrics.splice(result.source.index, 1);
     reorderedMetrics.splice(result.destination.index, 0, movedMetric);
-
     setEditableMetricsData(reorderedMetrics);
   };
 
-  const handleImageClick = () => {
+  const onDragEndImages = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const reorderedImages = Array.from(editableImageData);
+    const [movedImage] = reorderedImages.splice(result.source.index, 1);
+    reorderedImages.splice(result.destination.index, 0, movedImage);
+    setEditableImageData(reorderedImages);
+  };
+
+  const handlePortfolioImageClick = () => {
     if (isEditing && fileInputRef.current) {
       fileInputRef.current.click();
     }
@@ -272,6 +324,36 @@ function Portfolio() {
     }
   };
 
+  const handlePhotosClick = () => {
+    if (isEditing && photosInputRef.current) {
+      photosInputRef.current.click();
+    }
+  };
+
+  const handlePhotosChange = (e) => {
+    const files = Array.from(e.target.files);
+    setNewImages([...newImages, ...files]);
+
+    if (photosInputRef.current) {
+      photosInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveNewImage = (index) => {
+    const updatedNewImages = [...newImages];
+    updatedNewImages.splice(index, 1);
+    setNewImages(updatedNewImages);
+
+    if (photosInputRef.current) {
+      photosInputRef.current.value = "";
+    }
+  };
+
+  const handleDeleteImage = (itemId) => {
+    const updatedItems = editableImageData.filter((item) => item.id !== itemId);
+    setEditableImageData(updatedItems);
+  };
+
   return (
     <div className="portfolio">
       <div className="portfolio-container">
@@ -281,7 +363,7 @@ function Portfolio() {
             style={{ cursor: isEditing ? "pointer" : "default" }}
             onMouseEnter={() => isEditing && setIsHovering(true)}
             onMouseLeave={() => isEditing && setIsHovering(false)}
-            onClick={handleImageClick}
+            onClick={handlePortfolioImageClick}
           >
             <img
               src={
@@ -567,18 +649,32 @@ function Portfolio() {
             )}
           </section>
         )}
-        {imageData.length > 0 && !isEditing && (
+        {editableImageData.length > 0 && !isEditing && (
           <section className="portfolio-section">
             <h2 className="portfolio-section_title">Media Gallery</h2>
             <div className="portfolio-media-grid">
-              {imageData.map((item) => (
+              {editableImageData.map((item) => (
                 <div className="portfolio-media-item" key={item.id}>
                   <img
                     src={`http://127.0.0.1:8000${item.image}`}
                     alt="Game Moment"
+                    className="portfolio-media-img"
                   />
                 </div>
               ))}
+              {newImages.length > 0 && (
+                <>
+                  {newImages.map((file, index) => (
+                    <div className="portfolio-media-item" key={index}>
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt="Game Moment"
+                        className="portfolio-media-img"
+                      />
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           </section>
         )}
@@ -586,19 +682,84 @@ function Portfolio() {
           <section className="portfolio-section">
             <h2 className="portfolio-section_title">Media Gallery</h2>
             <div className="portfolio-media-grid">
-              {imageData.map((item) => (
-                <div className="portfolio-media-item" key={item.id}>
-                  <img
-                    src={`http://127.0.0.1:8000${item.image}`}
-                    alt="Game Moment"
-                  />
-                </div>
-              ))}
-              <button className="portfolio-media-add">
+              <DragDropContext onDragEnd={onDragEndImages}>
+                <Droppable droppableId="imagesList" direction="horizontal">
+                  {(provided) => (
+                    <div
+                      className="portfolio-media-list"
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                    >
+                      {editableImageData.map((item, index) => (
+                        <Draggable
+                          key={item.id}
+                          draggableId={`image-${item.id}`}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className={`portfolio-media-item ${
+                                snapshot.isDragging ? "dragging" : ""
+                              }`}
+                            >
+                              <img
+                                src={`http://127.0.0.1:8000${item.image}`}
+                                alt="Game Moment"
+                                className="portfolio-media-img-edit"
+                              />
+                              <button
+                                className="portfolio-media-x"
+                                onClick={() => handleDeleteImage(item.id)}
+                              >
+                                X
+                              </button>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {newImages.map((file, index) => (
+                        <div
+                          className="portfolio-media-item new-image"
+                          key={`new-${index}`}
+                        >
+                          <img
+                            src={URL.createObjectURL(file)}
+                            alt="New Game Moment"
+                            className="portfolio-media-img-edit"
+                          />
+                          <button
+                            className="portfolio-media-x"
+                            onClick={() => handleRemoveNewImage(index)}
+                          >
+                            X
+                          </button>
+                        </div>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+              <button
+                className="portfolio-media-add"
+                onClick={handlePhotosClick}
+              >
                 <FontAwesomeIcon icon={faPlus} />
               </button>
             </div>
           </section>
+        )}
+        {isEditing && (
+          <input
+            type="file"
+            accept="image/*"
+            ref={photosInputRef}
+            style={{ display: "none" }}
+            onChange={handlePhotosChange}
+          />
         )}
         <section className="portfolio-section">
           <div className="portfolio-contact-wrapper">
