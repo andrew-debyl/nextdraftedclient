@@ -26,17 +26,17 @@ function Portfolio() {
   const [statsData, setStatsData] = useState([]);
   const [metricsData, setMetricsData] = useState([]);
   const [imageData, setImageData] = useState([]);
-  const [videoData, setVideoTemp] = useState([]);
+  const [videoData, setVideoData] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editablePortfolio, setEditablePortfolio] = useState({});
   const [editableStatsData, setEditableStatsData] = useState([]);
   const [editableMetricsData, setEditableMetricsData] = useState([]);
   const [editableImageData, setEditableImageData] = useState([]);
   const loggedInUser = sessionStorage.getItem("username");
+  const [editableVideoData, setEditableVideoData] = useState([]);
   const fileInputRef = useRef(null);
   const photosInputRef = useRef(null);
   const [isHovering, setIsHovering] = useState(false);
-  const [newImages, setNewImages] = useState([]);
 
   let portfolio_url = `http://127.0.0.1:8000/portfolios/${username}/${portfolioId}`;
 
@@ -56,10 +56,22 @@ function Portfolio() {
           .filter((item) => item.category === "stats")
           .sort((a, b) => a.order - b.order)
       );
+      setEditableStatsData(
+        retobj.items
+          .filter((item) => item.category === "stats")
+          .sort((a, b) => a.order - b.order)
+          .map((item) => ({ ...item }))
+      );
       setMetricsData(
         retobj.items
           .filter((item) => item.category === "metrics")
           .sort((a, b) => a.order - b.order)
+      );
+      setEditableMetricsData(
+        retobj.items
+          .filter((item) => item.category === "metrics")
+          .sort((a, b) => a.order - b.order)
+          .map((item) => ({ ...item }))
       );
       setImageData(
         retobj.items
@@ -71,24 +83,17 @@ function Portfolio() {
           .filter((item) => item.category === "image")
           .sort((a, b) => a.order - b.order)
       );
-      setVideoTemp(
+      setVideoData(
+        retobj.items
+          .filter((item) => item.category === "video")
+          .sort((a, b) => a.order - b.order)
+      );
+      setEditableVideoData(
         retobj.items
           .filter((item) => item.category === "video")
           .sort((a, b) => a.order - b.order)
       );
       setEditablePortfolio({ ...retobj.portfolios });
-      setEditableStatsData(
-        retobj.items
-          .filter((item) => item.category === "stats")
-          .sort((a, b) => a.order - b.order)
-          .map((item) => ({ ...item }))
-      );
-      setEditableMetricsData(
-        retobj.items
-          .filter((item) => item.category === "metrics")
-          .sort((a, b) => a.order - b.order)
-          .map((item) => ({ ...item }))
-      );
     }
   };
 
@@ -103,7 +108,7 @@ function Portfolio() {
       behavior: "smooth",
     });
   };
-console.log(imageData)
+
   const handleSaveClick = async () => {
     const updatedPortfolioData = { ...editablePortfolio };
     const formData = new FormData();
@@ -144,16 +149,38 @@ console.log(imageData)
         order: index, // Update order based on current position
         category: "image",
       }));
+      const updatedVideoData = editableVideoData.map((item, index) => ({
+        ...item,
+        order: index, // Update order based on current position
+        category: "video",
+      }));
 
-      const allItems = [...updatedStatsData, ...updatedMetricsData];
+      const allItems = [
+        ...updatedStatsData,
+        ...updatedMetricsData,
+        ...updatedVideoData,
+      ];
 
       if (editableImageData) {
         await Promise.all(
           updatedImageData.map(async (item) => {
-            await fetch(portfolio_url + `/items/${item.id}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ order: item.order }),
+            const itemUrl = item.image
+              ? portfolio_url + `/items/${item.id}`
+              : portfolio_url + `/items`;
+
+            const formData = new FormData();
+            if (item.image) {
+              formData.append("order", item.order);
+            } else {
+              formData.append("order", item.order);
+              formData.append("sport_portfolio", portfolioId);
+              formData.append("category", "image");
+              formData.append("image", item.newImage[0]);
+            }
+
+            await fetch(itemUrl, {
+              method: item.image ? "PUT" : "POST",
+              body: formData,
             });
           })
         );
@@ -168,19 +195,6 @@ console.log(imageData)
             method: item.id ? "PUT" : "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(item),
-          });
-        })
-      );
-
-      await Promise.all(
-        newImages.map(async (file) => {
-          const formData = new FormData();
-          formData.append("sport_portfolio", portfolioId);
-          formData.append("category", "image");
-          formData.append("image", file);
-          await fetch(portfolio_url + `/items`, {
-            method: "POST",
-            body: formData,
           });
         })
       );
@@ -204,6 +218,12 @@ console.log(imageData)
           (id) => !updatedImageData.some((updatedItem) => updatedItem.id === id)
         );
 
+      const videosToDelete = videoData
+        .map((item) => item.id)
+        .filter(
+          (id) => !updatedVideoData.some((updatedItem) => updatedItem.id === id)
+        );
+
       await Promise.all([
         ...statsToDelete.map((id) =>
           fetch(portfolio_url + `/items/${id}`, { method: "DELETE" })
@@ -214,11 +234,13 @@ console.log(imageData)
         ...imagesToDelete.map((id) =>
           fetch(portfolio_url + `/items/${id}`, { method: "DELETE" })
         ),
+        ...videosToDelete.map((id) =>
+          fetch(portfolio_url + `/items/${id}`, { method: "DELETE" })
+        ),
       ]);
 
       get_portfolio();
       setIsEditing(false);
-      setNewImages([]);
     } catch (error) {
       console.error("Error updating portfolio:", error);
     }
@@ -248,6 +270,13 @@ console.log(imageData)
     setEditableMetricsData(updatedMetrics);
   };
 
+  const handleVideosInputChange = (e, index) => {
+    const { name, value } = e.target;
+    const updatedVideos = [...editableVideoData];
+    updatedVideos[index] = { ...updatedVideos[index], [name]: value };
+    setEditableVideoData(updatedVideos);
+  };
+
   const handleAddStat = () => {
     setEditableStatsData([
       ...editableStatsData,
@@ -272,6 +301,19 @@ console.log(imageData)
     const updatedMetrics = [...editableMetricsData];
     updatedMetrics.splice(index, 1);
     setEditableMetricsData(updatedMetrics);
+  };
+
+  const handleAddVideo = () => {
+    setEditableVideoData([
+      ...editableVideoData,
+      { title: "", data: "", category: "video" },
+    ]);
+  };
+
+  const handleDeleteVideo = (index) => {
+    const updatedVideo = [...editableVideoData];
+    updatedVideo.splice(index, 1);
+    setEditableVideoData(updatedVideo);
   };
 
   const onDragEndStats = (result) => {
@@ -308,6 +350,17 @@ console.log(imageData)
     setEditableImageData(reorderedImages);
   };
 
+  const onDragEndVideos = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const reorderedVideos = Array.from(editableVideoData);
+    const [movedVideo] = reorderedVideos.splice(result.source.index, 1);
+    reorderedVideos.splice(result.destination.index, 0, movedVideo);
+    setEditableVideoData(reorderedVideos);
+  };
+
   const handlePortfolioImageClick = () => {
     if (isEditing && fileInputRef.current) {
       fileInputRef.current.click();
@@ -332,17 +385,14 @@ console.log(imageData)
 
   const handlePhotosChange = (e) => {
     const files = Array.from(e.target.files);
-    setNewImages([...newImages, ...files]);
 
-    if (photosInputRef.current) {
-      photosInputRef.current.value = "";
-    }
-  };
-
-  const handleRemoveNewImage = (index) => {
-    const updatedNewImages = [...newImages];
-    updatedNewImages.splice(index, 1);
-    setNewImages(updatedNewImages);
+    setEditableImageData([
+      ...editableImageData,
+      {
+        id: Math.random().toString(36).substring(2, 15),
+        newImage: files,
+      },
+    ]);
 
     if (photosInputRef.current) {
       photosInputRef.current.value = "";
@@ -353,6 +403,13 @@ console.log(imageData)
     const updatedItems = editableImageData.filter((item) => item.id !== itemId);
     setEditableImageData(updatedItems);
   };
+
+  function extractVideoId(fullLink) {
+    const videoIdMatch = fullLink.match(
+      /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})(?:.+)?/
+    );
+    return videoIdMatch ? videoIdMatch[1] : null;
+  }
 
   return (
     <div className="portfolio">
@@ -662,19 +719,6 @@ console.log(imageData)
                   />
                 </div>
               ))}
-              {newImages.length > 0 && (
-                <>
-                  {newImages.map((file, index) => (
-                    <div className="portfolio-media-item" key={index}>
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt="Game Moment"
-                        className="portfolio-media-img"
-                      />
-                    </div>
-                  ))}
-                </>
-              )}
             </div>
           </section>
         )}
@@ -706,7 +750,11 @@ console.log(imageData)
                               }`}
                             >
                               <img
-                                src={`http://127.0.0.1:8000${item.image}`}
+                                src={
+                                  item.image
+                                    ? `http://127.0.0.1:8000${item.image}`
+                                    : URL.createObjectURL(item.newImage[0])
+                                }
                                 alt="Game Moment"
                                 className="portfolio-media-img-edit"
                               />
@@ -719,24 +767,6 @@ console.log(imageData)
                             </div>
                           )}
                         </Draggable>
-                      ))}
-                      {newImages.map((file, index) => (
-                        <div
-                          className="portfolio-media-item new-image"
-                          key={`new-${index}`}
-                        >
-                          <img
-                            src={URL.createObjectURL(file)}
-                            alt="New Game Moment"
-                            className="portfolio-media-img-edit"
-                          />
-                          <button
-                            className="portfolio-media-x"
-                            onClick={() => handleRemoveNewImage(index)}
-                          >
-                            X
-                          </button>
-                        </div>
                       ))}
                       {provided.placeholder}
                     </div>
@@ -760,6 +790,98 @@ console.log(imageData)
             style={{ display: "none" }}
             onChange={handlePhotosChange}
           />
+        )}
+        {(videoData.length > 0 || isEditing) && (
+          <section className="portfolio-section">
+            <h2 className="portfolio-section_title">Videos</h2>
+            {isEditing ? (
+              <DragDropContext onDragEnd={onDragEndVideos}>
+                <Droppable droppableId="videosList">
+                  {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                      {editableVideoData.map((item, index) => (
+                        <Draggable
+                          key={
+                            item.id ? `video-${item.id}` : `video-new-${index}`
+                          }
+                          draggableId={
+                            item.id ? `video-${item.id}` : `video-new-${index}`
+                          }
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              className={`edit-portfolio-item edit-item draggable-item ${
+                                snapshot.isDragging ? "dragging" : ""
+                              }`}
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <b className="edit-portfolio-title">
+                                Youtube Video URL:{" "}
+                              </b>
+                              <input
+                                type="text"
+                                name="data"
+                                value={item.data || ""}
+                                onChange={(e) =>
+                                  handleVideosInputChange(e, index)
+                                }
+                                placeholder="Youtube URL"
+                                className="edit-portfolio-input"
+                              />
+                              <button
+                                type="button"
+                                className="portfolio-button"
+                                style={{ marginTop: "10px" }}
+                                onClick={() => handleDeleteVideo(index)}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            ) : (
+              <>
+                {editableVideoData.map((item) => (
+                  <div key={item.id} className="portfolio-videos-wrapper">
+                    <iframe
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      src={`https://www.youtube.com/embed/${extractVideoId(
+                        item.data
+                      )}`}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                ))}
+              </>
+            )}
+
+            {isEditing && editableVideoData.length <= 2 && (
+              <button
+                type="button"
+                className="portfolio-button"
+                onClick={handleAddVideo}
+              >
+                Add Video
+              </button>
+            )}
+          </section>
         )}
         <section className="portfolio-section">
           <div className="portfolio-contact-wrapper">
