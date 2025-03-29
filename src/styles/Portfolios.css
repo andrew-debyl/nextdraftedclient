@@ -23,6 +23,7 @@
   background-color: #ffd700;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .portfolios-heading-btn:hover {
@@ -82,4 +83,87 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+
+.portfolios-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top */
+}
+
+.portfolios-modal {
+  background-color: #222;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 400px;
+  color: #fff;
+}
+
+.portfolios-modal-title {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #ffd700;
+  text-align: center;
+}
+
+.portfolios-modal-content {
+  margin-bottom: 20px;
+}
+
+.portfolios-modal-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+  font-size: 16px;
+}
+
+.portfolios-modal-input:focus {
+  outline: none;
+  border-color: #ffd700;
+}
+
+.portfolios-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.portfolios-modal-save-button,
+.portfolios-modal-cancel-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.portfolios-modal-save-button {
+  background-color: #ffd700; 
+  color: black;
+}
+
+.portfolios-modal-save-button:hover {
+  background-color: #f7e377;
+}
+
+.portfolios-modal-cancel-button {
+  background-color: #e74c3c; 
+  color: white;
+}
+
+.portfolios-modal-cancel-button:hover {
+  background-color: #aa2929;
 }

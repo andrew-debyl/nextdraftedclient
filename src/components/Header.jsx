@@ -46,8 +46,8 @@ function Header() {
                 </Link>
               </li>
               <li>
-                <Link to="/" className="header_item">
-                  RECRUITERS
+                <Link to="/connect" className="header_item">
+                  CONNECT
                 </Link>
               </li>
               <li>
@@ -81,8 +81,8 @@ function Header() {
                 </Link>
               </li>
               <li>
-                <Link to="/" className="header_item">
-                  RECRUITERS
+                <Link to="/connect" className="header_item">
+                  CONNECT
                 </Link>
               </li>
               <li>

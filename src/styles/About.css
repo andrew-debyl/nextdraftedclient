@@ -1,73 +1,120 @@
 .about-container {
-  width: 80%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 0;
+  width: 90%; /* Slightly wider */
+  max-width: 1400px; /* Larger max width */
+  margin: 50px auto; /* Add some top/bottom margin */
+  padding: 60px; /* More padding */
+  background-color: #121212; /* Darker, semi-transparent background */
+  border-radius: 10px; /* Soft rounded corners */
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); /* Subtle glow effect */
+  position: relative; /* For potential background overlays */
+  overflow: hidden; /* To contain pseudo-elements */
+}
+
+/* Optional: Add a subtle background pattern */
+.about-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../assets/subtle-pattern.png'); /* Replace with your pattern image */
+  background-repeat: repeat;
+  opacity: 0.1;
+  z-index: -1;
 }
 
 .about-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 50px; /* More space */
+  padding-bottom: 20px;
+  border-bottom: 2px solid #ffd700; /* More defined header separation */
 }
 
 .about-header h1 {
-  font-size: 36px;
+  font-size: 48px; /* Larger title */
   color: #ffd700;
+  font-family: 'Montserrat', sans-serif; /* Example cooler font - import in your index.css or similar */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Emphasize the title */
+  letter-spacing: 1px;
 }
 
 .about-header p {
-  font-size: 18px;
-  color: white;
-  margin-top: 10px;
+  font-size: 20px; /* Slightly larger subtitle */
+  color: #eee; /* Lighter text */
+  margin-top: 15px;
+  font-style: italic;
 }
 
 .about-section {
-  margin-bottom: 40px;
+  margin-bottom: 60px; /* More spacing between sections */
+  padding: 30px;
+  border-radius: 8px;
+  /* Subtle background for sections */
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.1); /* Subtle border */
 }
 
 .about-section h2 {
-  font-size: 28px;
+  font-size: 32px; /* Larger section titles */
   color: #ffd700;
-  margin-bottom: 15px;
+  font-family: 'Oswald', sans-serif; /* Another example cooler font */
+  margin-bottom: 20px;
+  text-transform: uppercase; /* Make titles stand out */
+  letter-spacing: 0.5px;
 }
 
 .about-section p {
-  font-size: 16px;
-  color: white;
-  line-height: 1.6;
+  font-size: 18px; /* Slightly larger paragraph text */
+  color: #ddd; /* Lighter text */
+  line-height: 1.7;
 }
 
 .about-section ul {
   list-style: none;
   padding: 0;
+  margin-top: 20px;
 }
 
 .about-section ul li {
-  font-size: 16px;
-  color: white;
-  margin-bottom: 10px;
+  font-size: 18px; /* Larger list items */
+  color: #ddd;
+  margin-bottom: 15px;
   display: flex;
   align-items: center;
 }
 
 .about-section ul li::before {
-  content: "•";
+  content: "»"; /* Use a different bullet style */
   color: #ffd700;
-  margin-right: 10px;
-  font-size: 18px;
+  margin-right: 15px;
+  font-size: 24px; /* Larger bullet */
 }
 
 .about-footer {
   text-align: center;
-  margin-top: 50px;
-  font-size: 16px;
+  margin-top: 70px; /* More space */
+  padding-top: 30px;
+  border-top: 2px solid #ffd700; /* More defined footer separation */
+  font-size: 18px;
+  color: #ccc;
 }
 
 .about-footer a {
   color: #ffd700;
   text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease; /* Smooth hover transition */
 }
 
 .about-footer a:hover {
+  color: #fff;
   text-decoration: underline;
+}
+
+/* Optional: Add a subtle animation on section hover */
+.about-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }

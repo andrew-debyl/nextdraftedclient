@@ -8,6 +8,7 @@ import UserProfile from './pages/UserProfile'
 import Header from './components/Header'
 import ForgotPass from './components/ForgotPass'
 import Portfolio from './components/Portfolio'
+import Connect from './pages/Connect'
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/signup" element={<Signup/>}/>
           <Route path="/profile/:username" element={<UserProfile/>}/>
           <Route path="/forgotpass" element={<ForgotPass/>}/>
+          <Route path="/connect" element={<Connect/>}/>
         </Routes>
       </Router>
     </>

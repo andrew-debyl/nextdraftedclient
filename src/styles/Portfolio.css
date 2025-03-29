@@ -292,7 +292,7 @@
 .portfolio-contact-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 .portfolio-contact-title {
@@ -321,4 +321,20 @@
   background-color: #444;
   color: #fff;
   font-size: 16px;
+}
+
+.portfolio-contact-info {
+  display: flex;
+  align-items: center; 
+  gap: 20px; 
+  margin-top: 10px;
+  margin-left: 2px;
+}
+
+.portfolio-social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; 
+  margin-left: 2px;
+  margin-top: 10px;
 }

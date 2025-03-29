@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../styles/Portfolio.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -37,6 +37,8 @@ function Portfolio() {
   const fileInputRef = useRef(null);
   const photosInputRef = useRef(null);
   const [isHovering, setIsHovering] = useState(false);
+
+  const navigate = useNavigate();
 
   let portfolio_url = `http://127.0.0.1:8000/portfolios/${username}/${portfolioId}`;
 
@@ -243,6 +245,34 @@ function Portfolio() {
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating portfolio:", error);
+    }
+  };
+
+  const handleDeletePortfolio = async () => {
+    if (window.confirm("Are you sure you want to delete this portfolio?")) {
+      const delete_url = `http://127.0.0.1:8000/portfolios/${username}/${portfolioId}/delete`;
+
+      try {
+        const res = await fetch(delete_url, {
+          method: "DELETE",
+        });
+
+        if (res.status === 204) {
+          console.log(`Portfolio with ID ${portfolioId} deleted successfully.`);
+          navigate(`/portfolios/${username}`);
+        } else {
+          const errorData = await res.json();
+          console.error("Failed to delete portfolio:", errorData);
+          alert(
+            `Failed to delete portfolio: ${
+              errorData?.error || "An error occurred."
+            }`
+          );
+        }
+      } catch (error) {
+        console.error("Error deleting portfolio:", error);
+        alert("Error deleting portfolio.");
+      }
     }
   };
 
@@ -502,27 +532,36 @@ function Portfolio() {
                 <h1>
                   {firstName} {lastName}
                 </h1>
-                <p>
-                  {portfolio.sport} - {portfolio.position}
-                </p>
+                {portfolio.sport?.length > 0 &&
+                portfolio.position?.length > 0 ? (
+                  <p>
+                    {portfolio.sport} - {portfolio.position}
+                  </p>
+                ) : (
+                  <p>
+                    {portfolio.sport} {portfolio.position}
+                  </p>
+                )}
                 <p>{portfolio.team}</p>
               </div>
             )}
           </div>
         </div>
-        <section className="portfolio-section">
-          <h2 className="portfolio-section_title">About Me</h2>
-          {isEditing ? (
-            <textarea
-              className="portfolio-edit-textarea"
-              name="description"
-              value={editablePortfolio.description || ""}
-              onChange={handlePortfolioInputChange}
-            />
-          ) : (
-            <p className="portfolio-section_para">{portfolio.description}</p>
-          )}
-        </section>
+        {(editablePortfolio.description?.length > 0 || isEditing) && (
+          <section className="portfolio-section">
+            <h2 className="portfolio-section_title">About Me</h2>
+            {isEditing ? (
+              <textarea
+                className="portfolio-edit-textarea"
+                name="description"
+                value={editablePortfolio.description || ""}
+                onChange={handlePortfolioInputChange}
+              />
+            ) : (
+              <p className="portfolio-section_para">{portfolio.description}</p>
+            )}
+          </section>
+        )}
         {statsData.length > 0 || isEditing ? (
           <section className="portfolio-section">
             <h2 className="portfolio-section_title">Stats</h2>
@@ -871,7 +910,6 @@ function Portfolio() {
                 ))}
               </>
             )}
-
             {isEditing && editableVideoData.length <= 2 && (
               <button
                 type="button"
@@ -883,164 +921,179 @@ function Portfolio() {
             )}
           </section>
         )}
-        <section className="portfolio-section">
-          <div className="portfolio-contact-wrapper">
-            {(portfolio.email || portfolio.phone_number) && !isEditing && (
-              <>
-                <h3 className="portfolio-contact-title">Contact Me</h3>
-                <div className="contact-info">
-                  {portfolio.email && (
-                    <a
-                      href={`mailto:${portfolio.email}`}
-                      className="contact-icon"
-                    >
-                      <FontAwesomeIcon icon={faEnvelope} />
-                    </a>
-                  )}
-                  {portfolio.phone_number && (
-                    <a
-                      href={`tel:${portfolio.phone_number}`}
-                      className="contact-icon"
-                    >
-                      <FontAwesomeIcon icon={faPhone} />
-                    </a>
-                  )}
-                </div>
-              </>
-            )}
-            {isEditing && (
-              <>
-                <h3 className="portfolio-contact-title">Contact Me</h3>
-                <div className="edit-portfolio-item">
-                  <b className="edit-portfolio-title">Email: </b>
-                  <input
-                    type="email"
-                    name="email"
-                    value={editablePortfolio.email || ""}
-                    onChange={handlePortfolioInputChange}
-                    placeholder="Email"
-                    className="edit-portfolio-input"
-                  />
-                </div>
-                <div className="edit-portfolio-item">
-                  <b className="edit-portfolio-title">Phone Number: </b>
-                  <input
-                    type="text"
-                    name="phone_number"
-                    value={editablePortfolio.phone_number || ""}
-                    onChange={handlePortfolioInputChange}
-                    placeholder="Phone Number"
-                    className="edit-portfolio-input"
-                  />
-                </div>
-              </>
-            )}
-            {(portfolio.instagram ||
-              portfolio.linkedin ||
-              portfolio.youtube ||
-              portfolio.facebook) &&
-              !isEditing && (
+        {((!isEditing &&
+          (portfolio.email ||
+            portfolio.phone_number ||
+            portfolio.instagram ||
+            portfolio.linkedin ||
+            portfolio.youtube ||
+            portfolio.facebook)) ||
+          isEditing) && (
+          <section className="portfolio-section">
+            <div className="portfolio-contact-wrapper">
+              {!isEditing ? (
                 <>
+                  {(portfolio.email || portfolio.phone_number) && (
+                    <div>
+                      <h3 className="portfolio-contact-title">Contact Me</h3>
+                      <div className="portfolio-contact-info">
+                        {portfolio.email && (
+                          <a
+                            href={`mailto:${portfolio.email}`}
+                            className="contact-icon"
+                          >
+                            <FontAwesomeIcon icon={faEnvelope} />
+                          </a>
+                        )}
+                        {portfolio.phone_number && (
+                          <a
+                            href={`tel:${portfolio.phone_number}`}
+                            className="contact-icon"
+                          >
+                            <FontAwesomeIcon icon={faPhone} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {(portfolio.instagram ||
+                    portfolio.linkedin ||
+                    portfolio.youtube ||
+                    portfolio.facebook) && (
+                    <div>
+                      <h3 className="portfolio-contact-title">Follow Me</h3>
+                      <div className="portfolio-social-links">
+                        {portfolio.instagram && (
+                          <a
+                            href={portfolio.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="social-icon"
+                          >
+                            <FontAwesomeIcon icon={faInstagram} />
+                          </a>
+                        )}
+                        {portfolio.linkedin && (
+                          <a
+                            href={portfolio.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="social-icon"
+                          >
+                            <FontAwesomeIcon icon={faLinkedin} />
+                          </a>
+                        )}
+                        {portfolio.youtube && (
+                          <a
+                            href={portfolio.youtube}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="social-icon"
+                          >
+                            <FontAwesomeIcon icon={faYoutube} />
+                          </a>
+                        )}
+                        {portfolio.facebook && (
+                          <a
+                            href={portfolio.facebook}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="social-icon"
+                          >
+                            <FontAwesomeIcon icon={faFacebook} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <h3 className="portfolio-contact-title">Contact Me</h3>
+                  <div className="edit-portfolio-item">
+                    <b className="edit-portfolio-title">Email: </b>
+                    <input
+                      type="email"
+                      name="email"
+                      value={editablePortfolio?.email || ""}
+                      onChange={handlePortfolioInputChange}
+                      placeholder="Email"
+                      className="edit-portfolio-input"
+                    />
+                  </div>
+                  <div className="edit-portfolio-item">
+                    <b className="edit-portfolio-title">Phone Number: </b>
+                    <input
+                      type="text"
+                      name="phone_number"
+                      value={editablePortfolio?.phone_number || ""}
+                      onChange={handlePortfolioInputChange}
+                      placeholder="Phone Number"
+                      className="edit-portfolio-input"
+                    />
+                  </div>
                   <h3 className="portfolio-contact-title">Follow Me</h3>
-                  <div className="social-links">
-                    {portfolio.instagram && (
-                      <a
-                        href={portfolio.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="social-icon"
-                      >
-                        <FontAwesomeIcon icon={faInstagram} />
-                      </a>
-                    )}
-                    {portfolio.linkedin && (
-                      <a
-                        href={portfolio.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="social-icon"
-                      >
-                        <FontAwesomeIcon icon={faLinkedin} />
-                      </a>
-                    )}
-                    {portfolio.youtube && (
-                      <a
-                        href={portfolio.youtube}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="social-icon"
-                      >
-                        <FontAwesomeIcon icon={faYoutube} />
-                      </a>
-                    )}
-                    {portfolio.facebook && (
-                      <a
-                        href={portfolio.facebook}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="social-icon"
-                      >
-                        <FontAwesomeIcon icon={faFacebook} />
-                      </a>
-                    )}
+                  <div className="edit-portfolio-item">
+                    <b className="edit-portfolio-title">Instagram: </b>
+                    <input
+                      type="text"
+                      name="instagram"
+                      value={editablePortfolio?.instagram || ""}
+                      onChange={handlePortfolioInputChange}
+                      placeholder="Instagram"
+                      className="edit-portfolio-input"
+                    />
+                  </div>
+                  <div className="edit-portfolio-item">
+                    <b className="edit-portfolio-title">Linkedin: </b>
+                    <input
+                      type="text"
+                      name="linkedin"
+                      value={editablePortfolio?.linkedin || ""}
+                      onChange={handlePortfolioInputChange}
+                      placeholder="Linkedin"
+                      className="edit-portfolio-input"
+                    />
+                  </div>
+                  <div className="edit-portfolio-item">
+                    <b className="edit-portfolio-title">Youtube: </b>
+                    <input
+                      type="text"
+                      name="youtube"
+                      value={editablePortfolio?.youtube || ""}
+                      onChange={handlePortfolioInputChange}
+                      placeholder="Youtube"
+                      className="edit-portfolio-input"
+                    />
+                  </div>
+                  <div className="edit-portfolio-item">
+                    <b className="edit-portfolio-title">Facebook: </b>
+                    <input
+                      type="text"
+                      name="facebook"
+                      value={editablePortfolio?.facebook || ""}
+                      onChange={handlePortfolioInputChange}
+                      placeholder="Facebook"
+                      className="edit-portfolio-input"
+                    />
                   </div>
                 </>
               )}
-            {isEditing && (
-              <>
-                <h3 className="portfolio-contact-title">Follow Me</h3>
-                <div className="edit-portfolio-item">
-                  <b className="edit-portfolio-title">Instagram: </b>
-                  <input
-                    type="text"
-                    name="instagram"
-                    value={editablePortfolio.instagram || ""}
-                    onChange={handlePortfolioInputChange}
-                    placeholder="Instagram"
-                    className="edit-portfolio-input"
-                  />
-                </div>
-                <div className="edit-portfolio-item">
-                  <b className="edit-portfolio-title">Linkedin: </b>
-                  <input
-                    type="text"
-                    name="linkedin"
-                    value={editablePortfolio.linkedin || ""}
-                    onChange={handlePortfolioInputChange}
-                    placeholder="Linkedin"
-                    className="edit-portfolio-input"
-                  />
-                </div>
-                <div className="edit-portfolio-item">
-                  <b className="edit-portfolio-title">Youtube: </b>
-                  <input
-                    type="text"
-                    name="youtube"
-                    value={editablePortfolio.youtube || ""}
-                    onChange={handlePortfolioInputChange}
-                    placeholder="Youtube"
-                    className="edit-portfolio-input"
-                  />
-                </div>
-                <div className="edit-portfolio-item">
-                  <b className="edit-portfolio-title">Facebook: </b>
-                  <input
-                    type="text"
-                    name="facebook"
-                    value={editablePortfolio.facebook || ""}
-                    onChange={handlePortfolioInputChange}
-                    placeholder="Facebook"
-                    className="edit-portfolio-input"
-                  />
-                </div>
-              </>
-            )}
-          </div>
-        </section>
+            </div>
+          </section>
+        )}
         {!isEditing && loggedInUser === username && (
-          <button className="portfolio-button" onClick={handleEditClick}>
-            EDIT
-          </button>
+          <div className="portfolio-edit-buttons">
+            <button className="portfolio-button" onClick={handleEditClick}>
+              EDIT
+            </button>
+            <button
+              className="portfolio-button"
+              onClick={handleDeletePortfolio}
+            >
+              DELETE
+            </button>
+          </div>
         )}
         {isEditing && (
           <div className="portfolio-edit-buttons">
